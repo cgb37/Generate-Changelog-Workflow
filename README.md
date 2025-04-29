@@ -21,13 +21,13 @@ The workflow leverages conventional commits and the conventional-changelog-cli t
 - Your project must use [Conventional Commits](https://www.conventionalcommits.org/) format for commit messages.
 - GitHub Actions must be enabled for your repository.
 - Your repository must have a branch named `main`.
-- https://www.npmjs.com/package/conventional-changelog-cli
+- Required npm package: [conventional-changelog-cli](https://www.npmjs.com/package/conventional-changelog-cli)
 
 ## Setup Instructions
 
 1. Add the workflow file to your repository:
-    - Create a directory: `.github/workflows/`
-    - Copy the `generate-changelog.yml` file into this directory
+   - Create a directory: `.github/workflows/`
+   - Copy the `generate-changelog.yml` file into this directory
 
 2. Customize the user credentials in the workflow file:
    ```yaml
@@ -35,9 +35,25 @@ The workflow leverages conventional commits and the conventional-changelog-cli t
    git config --local user.name "Your Team Name"
    ```
 
-3. Push these changes to your repository.
+3. Configure permissions for GitHub Actions (one of the following methods):
 
-4. (Optional) Add a badge to your main README.md:
+   **Option 1: Add permissions to workflow file**
+   ```yaml
+   permissions:
+     contents: write
+   ```
+
+   **Option 2: Use a Personal Access Token (PAT)**
+   Create a PAT with repo access and configure it in your repository secrets.
+
+   **Option 3: Configure repository settings (Recommended)**
+   - Navigate to Settings → Actions → General
+   - Under "Workflow permissions", select "Read and write permissions"
+   - Save changes
+
+4. Push these changes to your repository.
+
+5. (Optional) Add a badge to your main README.md:
    ```markdown
    ![Changelog](https://github.com/your-org/your-repo/actions/workflows/generate-changelog.yml/badge.svg)
    ```
@@ -70,20 +86,32 @@ Available presets include:
 - `jquery`
 - `jshint`
 
-## Limitations
+## Debugging Tips
 
-- The workflow only generates changelogs for commits that follow the conventional commits format. Non-conforming commits will not be included.
-- The workflow does not automatically bump version numbers in package.json or create git tags (commented code is provided for this option).
-- GitHub Actions runners need write permissions to the repository to push the updated changelog.
-- If the CHANGELOG.md file is edited manually, these changes might be overwritten when the workflow runs again.
+The current workflow includes helpful debugging steps to troubleshoot issues:
+- Displays recent commits
+- Shows verbose output during changelog generation
+- Checks if CHANGELOG.md exists
+- Displays git status
 
-## Troubleshooting
+## Troubleshooting Common Issues
+
+### Permission Errors (Error 403)
+
+If you encounter a permission error like:
+```
+remote: Permission to username/repo.git denied to github-actions[bot].
+fatal: unable to access 'https://github.com/username/repo/': The requested URL returned error: 403
+```
+
+Use one of the permission configuration options described in the "Setup Instructions" section.
 
 ### Workflow Doesn't Run
 
 - Check that your PRs are being merged into the `main` branch.
 - Verify that the workflow file is correctly placed in `.github/workflows/`.
 - Ensure that GitHub Actions is enabled for your repository.
+- Check that the PR is not labeled with `[skip ci]` in the commit message.
 
 ### Changelog Not Updated
 
@@ -91,13 +119,11 @@ Available presets include:
 - Check the GitHub Actions logs for any errors.
 - Ensure that the GitHub Actions runner has write permissions to the repository.
 
-### Permission Issues
+## Limitations
 
-If you encounter permission issues when pushing changes, consider:
-
-1. Using a GitHub App for authentication
-2. Creating a dedicated service account with appropriate permissions
-3. Modifying the workflow to create a pull request instead of directly pushing changes
+- The workflow only generates changelogs for commits that follow the conventional commits format. Non-conforming commits will not be included.
+- The workflow does not automatically bump version numbers in package.json or create git tags (commented code is provided for this option).
+- If the CHANGELOG.md file is edited manually, these changes might be overwritten when the workflow runs again.
 
 ## Contributing
 
