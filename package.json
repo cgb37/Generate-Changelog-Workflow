@@ -1,0 +1,12 @@
+{
+  "name": "changelog-generator",
+  "version": "1.0.0",
+  "description": "Automated changelog generation",
+  "private": true,
+  "scripts": {
+    "generate": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
+  },
+  "devDependencies": {
+    "conventional-changelog-cli": "^5.0.0"
+  }
+}
