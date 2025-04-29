@@ -21,6 +21,7 @@ The workflow leverages conventional commits and the conventional-changelog-cli t
 - Your project must use [Conventional Commits](https://www.conventionalcommits.org/) format for commit messages.
 - GitHub Actions must be enabled for your repository.
 - Your repository must have a branch named `main`.
+- https://www.npmjs.com/package/conventional-changelog-cli
 
 ## Setup Instructions
 

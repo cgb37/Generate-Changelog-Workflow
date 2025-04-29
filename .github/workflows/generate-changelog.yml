@@ -44,8 +44,8 @@ jobs:
 
       - name: Commit and push if there are changes
         run: |
-          git config --local user.email "team@yourcompany.com"
-          git config --local user.name "Your Team Name"
+          git config --local user.email "cgb37@miami.edu"
+          git config --local user.name "Charles"
 
           # Check if there are changes to commit
           if git diff --exit-code --quiet CHANGELOG.md; then
