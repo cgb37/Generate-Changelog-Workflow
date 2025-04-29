@@ -18,7 +18,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Important: This ensures all history is fetched for changelog generation
-      
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -30,17 +31,20 @@ jobs:
 
       - name: Generate changelog
         run: |
-          # Check if CHANGELOG.md exists, create it if not
-          if [ ! -f CHANGELOG.md ]; then
-            touch CHANGELOG.md
-          fi
+          # Create an empty CHANGELOG.md file if it doesn't exist
+          touch CHANGELOG.md
 
-          # Generate the changelog content based on staging to main changes
-          # The -r 0 flag regenerates the entire changelog from scratch
-          conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+          # Print git log to debug
+          echo "Recent commits:"
+          git log -n 5 --pretty=format:"%h - %s (%an)"
 
-          # Optional: You can add a version tag here if you use semantic versioning
-          # git tag -a v$(node -p "require('./package.json').version") -m "Release v$(node -p "require('./package.json').version")"
+          # Generate the changelog with verbose output
+          echo "Generating changelog..."
+          conventional-changelog -p angular -i CHANGELOG.md -s -r 0 -v
+
+          # Show the content of the generated file (if any)
+          echo "CHANGELOG.md content:"
+          cat CHANGELOG.md
 
       - name: Commit and push if there are changes
         run: |
