@@ -51,12 +51,18 @@ jobs:
           git config --local user.email "cgb37@miami.edu"
           git config --local user.name "Charles"
 
-          # Check if there are changes to commit
-          if git diff --exit-code --quiet CHANGELOG.md; then
-            echo "No changes to commit"
-            exit 0
-          fi
+          # Debugging: Check if CHANGELOG.md exists
+          echo "Does CHANGELOG.md exist?"
+          ls -la CHANGELOG.md || echo "File does not exist"
 
-          git add CHANGELOG.md
-          git commit -m "docs: update changelog [skip ci]"
-          git push
+          # Add the file to git tracking regardless of changes
+          git add -f CHANGELOG.md
+
+          # Force a commit with specified message
+          git commit -m "docs: update changelog [skip ci]" || echo "Commit failed"
+
+          # Debugging: Check git status
+          git status
+
+          # Push changes to remote
+          git push || echo "Push failed"
